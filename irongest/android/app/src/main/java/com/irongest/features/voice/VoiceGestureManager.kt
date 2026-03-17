@@ -9,12 +9,14 @@
 package com.irongest.features.voice
 
 import android.content.Context
+import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import org.json.JSONObject
 import java.util.Locale
+import java.util.UUID
 
 /**
  * Voice command configuration
@@ -203,7 +205,7 @@ class VoiceGestureManager(private val context: Context) {
         val matches = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) ?: return
         val confidences = results.getFloatArray(SpeechRecognizer.CONFIDENCE_SCORES)
 
-        matches.forEachIndexed { index, text ->
+        matches.forEachIndexed { index: Int, text: String ->
             val confidence = confidences?.getOrNull(index) ?: 0f
 
             if (confidence >= config.confidenceThreshold) {
@@ -215,7 +217,7 @@ class VoiceGestureManager(private val context: Context) {
     private fun handlePartialResults(partialResults: Bundle?) {
         val matches = partialResults?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) ?: return
 
-        matches.forEach { text ->
+        matches.forEach { text: String ->
             // Check for keyword in partial results
             if (config.keyword.equals(text, ignoreCase = true)) {
                 onKeywordDetected?.invoke()
@@ -374,5 +376,3 @@ class VoiceGestureManager(private val context: Context) {
     }
 }
 
-// UUID import
-import java.util.UUID

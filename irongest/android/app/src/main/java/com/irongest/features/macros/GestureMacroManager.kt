@@ -258,7 +258,8 @@ class GestureMacroManager(private val context: Context) {
         val macro = GestureMacro(
             name = "Macro ${macros.size + 1}",
             trigger = trigger,
-            steps = recordedSteps.toList()
+            steps = recordedSteps.toList(),
+            actions = emptyList()
         )
 
         onMacroRecorded?.invoke(macro)
@@ -446,7 +447,7 @@ class GestureMacroManager(private val context: Context) {
 
         for (i in 0 until jsonArray.length()) {
             val macroJson = jsonArray.getJSONObject(i)
-            val macro = GestureMacro.fromJson(macroJson)
+            val macro = parseMacroFromJson(macroJson)
 
             // Check for duplicates
             if (macros.none { it.id == macro.id }) {
@@ -468,7 +469,7 @@ class GestureMacroManager(private val context: Context) {
         try {
             val jsonArray = JSONArray(json)
             for (i in 0 until jsonArray.length()) {
-                macros.add(GestureMacro.fromJson(jsonArray.getJSONObject(i)))
+                macros.add(parseMacroFromJson(jsonArray.getJSONObject(i)))
             }
         } catch (e: Exception) {
             // Invalid JSON, start fresh
@@ -539,15 +540,20 @@ fun GestureMacro.toJson(): JSONObject {
     }
 }
 
-fun GestureMacro.fromJson(json: JSONObject): GestureMacro {
-    // Parse from JSON
+private fun parseMacroFromJson(json: JSONObject): GestureMacro {
     return GestureMacro(
         id = json.getString("id"),
         name = json.getString("name"),
         description = json.optString("description", ""),
+        trigger = MacroTrigger(
+            type = TriggerType.GESTURE_SEQUENCE,
+            value = json.optString("triggerValue", ""),
+            condition = TriggerCondition.EXACT
+        ),
+        steps = emptyList(),
+        actions = emptyList(),
         enabled = json.optBoolean("enabled", true),
         priority = json.optInt("priority", 0),
         cooldownMs = json.optLong("cooldownMs", 1000)
-        // Parse remaining fields...
     )
 }

@@ -616,7 +616,7 @@ class AccessibilityControlService : AccessibilityService() {
 
         isGestureInProgress.set(true)
 
-        return super.dispatchGesture(gesture, callback)
+        return super.dispatchGesture(gesture, callback, null)
     }
 
     /**
