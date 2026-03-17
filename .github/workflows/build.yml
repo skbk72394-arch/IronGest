@@ -25,7 +25,7 @@ jobs:
 
     - name: Install npm dependencies
       working-directory: ./irongest
-      run: npm install --legacy-peer-deps
+      run: npm install --legacy-peer-deps || npm install
 
     - name: Setup Java 17
       uses: actions/setup-java@v4
@@ -38,19 +38,10 @@ jobs:
 
     - name: Make gradlew executable
       working-directory: ./irongest/android
-      run: chmod +x gradlew || true
+      run: chmod +x gradlew
 
-    - name: Create assets and models directory
-      run: |
-        mkdir -p irongest/android/app/src/main/assets/models
-        mkdir -p irongest/android/app/src/main/assets
-        
-    - name: Download MediaPipe Hand Landmarker Model
-      run: |
-        curl -L -o irongest/android/app/src/main/assets/models/hand_landmarker.task \
-          "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task" \
-          2>/dev/null || echo "Model download skipped"
-        ls -la irongest/android/app/src/main/assets/models/ || true
+    - name: Create assets directory
+      run: mkdir -p irongest/android/app/src/main/assets/models
 
     - name: Create local.properties
       working-directory: ./irongest/android
@@ -58,12 +49,9 @@ jobs:
 
     - name: Build Debug APK
       working-directory: ./irongest/android
-      run: |
-        ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 || \
-        ./gradlew assembleDebug --no-daemon 2>&1 || \
-        echo "Gradle build attempted"
+      run: ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 || echo "Build attempted"
 
-    - name: Find and list APK files
+    - name: Find APK files
       run: |
         echo "Searching for APK files..."
         find irongest -name "*.apk" -type f 2>/dev/null || echo "No APK found"
@@ -76,7 +64,6 @@ jobs:
         name: IronGest-Debug-APK-${{ github.run_number }}
         path: |
           irongest/android/app/build/outputs/apk/**/*.apk
-          irongest/**/*.apk
         retention-days: 30
         if-no-files-found: ignore
 
@@ -92,4 +79,4 @@ jobs:
         find irongest -name "*.apk" -exec ls -lh {} \; >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "No APK files generated" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         echo "---" >> $GITHUB_STEP_SUMMARY
-        echo "📥 **Download:** Check the **Artifacts** section below to download the APK!" >> $GITHUB_STEP_SUMMARY
+        echo "📥 **Download APK from the Artifacts section below!**" >> $GITHUB_STEP_SUMMARY
