@@ -85,7 +85,7 @@ class GestureAccessibilityService : AccessibilityService() {
             .addStroke(GestureDescription.StrokeDescription(path, 0, TAP_DURATION_MS))
             .build()
 
-        return dispatchGesture(gesture, createCallback(callback))
+        return dispatchGesture(gesture, createCallback(callback), null)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -98,7 +98,7 @@ class GestureAccessibilityService : AccessibilityService() {
             .addStroke(GestureDescription.StrokeDescription(path2, TAP_DURATION_MS + 50, TAP_DURATION_MS))
             .build()
 
-        return dispatchGesture(gesture, createCallback(callback))
+        return dispatchGesture(gesture, createCallback(callback), null)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -109,7 +109,7 @@ class GestureAccessibilityService : AccessibilityService() {
             .addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
             .build()
 
-        return dispatchGesture(gesture, createCallback(callback))
+        return dispatchGesture(gesture, createCallback(callback), null)
     }
 
     // ============================================================================
@@ -127,7 +127,7 @@ class GestureAccessibilityService : AccessibilityService() {
             .addStroke(GestureDescription.StrokeDescription(path, 0, durationMs))
             .build()
 
-        return dispatchGesture(gesture, createCallback(callback))
+        return dispatchGesture(gesture, createCallback(callback), null)
     }
 
     // ============================================================================
@@ -151,7 +151,7 @@ class GestureAccessibilityService : AccessibilityService() {
         return dispatchGesture(gesture, createCallback(object : GestureCallback {
             override fun onGestureCompleted() { callback?.onGestureCompleted() }
             override fun onGestureCancelled() { isDragging = false; callback?.onGestureCancelled() }
-        }))
+        }), null)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -172,7 +172,7 @@ class GestureAccessibilityService : AccessibilityService() {
 
         dragCurrentPoint = Point(x.toInt(), y.toInt())
 
-        return dispatchGesture(gesture, createCallback(callback))
+        return dispatchGesture(gesture, createCallback(callback), null)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -204,7 +204,7 @@ class GestureAccessibilityService : AccessibilityService() {
                 dragCurrentPoint = null
                 callback?.onGestureCancelled()
             }
-        }))
+        }), null)
 
         if (!result) {
             isDragging = false

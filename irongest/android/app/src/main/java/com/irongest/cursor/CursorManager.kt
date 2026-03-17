@@ -519,11 +519,18 @@ class CursorManager private constructor(
             lastScreenX,
             lastScreenY,
             abs(scrollDistance),
-            direction
-        ) {
-            stateMachine.transition(CursorState.IDLE)
-            overlayManager.setCursorState(CursorState.IDLE)
-        }
+            direction,
+            callback = object : AccessibilityControlService.GestureCallback {
+                override fun onGestureCompleted() {
+                    stateMachine.transition(CursorState.IDLE)
+                    overlayManager.setCursorState(CursorState.IDLE)
+                }
+                override fun onGestureCancelled() {
+                    stateMachine.transition(CursorState.IDLE)
+                    overlayManager.setCursorState(CursorState.IDLE)
+                }
+            }
+        )
     }
 
     // ============================================================================

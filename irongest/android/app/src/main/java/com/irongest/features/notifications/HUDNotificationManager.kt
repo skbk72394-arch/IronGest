@@ -382,7 +382,7 @@ class HUDNotificationManager(private val context: Context) {
             actions.add(NotificationAction(
                 id = "action_$index",
                 label = action.title.toString(),
-                actionIntent = action.actionIntent?.intent?.toUri(0)
+                actionIntent = action.actionIntent?.intentSender?.toString()
             ))
         }
 

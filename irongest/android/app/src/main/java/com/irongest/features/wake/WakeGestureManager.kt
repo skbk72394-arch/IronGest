@@ -21,7 +21,6 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.PowerManager
 import android.view.WindowManager
-import com.irongest.gestures.GestureRecognizer
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -91,8 +90,8 @@ class WakeGestureManager(private val context: Context) : SensorEventListener {
     private val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private var wakeLock: PowerManager.WakeLock? = null
 
-    // Gesture detection
-    private var gestureRecognizer: GestureRecognizer? = null
+    // Gesture detection placeholder
+    // GestureRecognizer will be integrated when available
 
     // Detection tracking
     private var proximityValue = Float.MAX_VALUE

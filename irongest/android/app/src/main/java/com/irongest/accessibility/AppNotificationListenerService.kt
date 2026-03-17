@@ -48,8 +48,8 @@ class AppNotificationListenerService : NotificationListenerService() {
     /**
      * Dismiss all notifications
      */
-    fun dismissAllNotifications() {
-        dismissAllNotifications()
+    fun dismissAll() {
+        cancelAllNotifications()
     }
 
     /**
