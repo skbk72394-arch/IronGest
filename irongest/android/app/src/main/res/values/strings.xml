@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  IronGest - String Resources
--->
 <resources>
     <string name="app_name">IronGest</string>
-    <string name="accessibility_service_description">IronGest enables air gesture control for your device using hand tracking. This allows you to control your cursor, perform clicks, scrolls, and other gestures without touching the screen.</string>
+    <string name="accessibility_service_description">IronGest enables air gesture control for your device. This allows you to control your cursor, perform clicks, scrolls, and other gestures without touching the screen using hand tracking technology.</string>
     <string name="accessibility_service_summary">Air gesture control for hands-free device interaction</string>
-    <string name="keyboard_service_name">IronGest Air Keyboard</string>
 </resources>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  IronGest - Splash Screen Icon
-  Arc reactor inspired design
--->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background -->
+    <item android:drawable="@color/ic_launcher_background"/>
+    
     <!-- Outer ring -->
     <item
         android:width="100dp"

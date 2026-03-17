@@ -1,11 +1,3 @@
-/**
- * IronGest - Boot Receiver
- * Handles device boot to optionally start the service
- * 
- * @author IronGest Team
- * @version 1.0.0
- */
-
 package com.irongest.receivers
 
 import android.content.BroadcastReceiver
@@ -22,8 +14,8 @@ class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
             Log.i(TAG, "Device boot completed")
-            // The service will be started when the user opens the app
-            // Auto-start requires special permissions and user consent
+            // Auto-start could be implemented here if needed
+            // For now, user needs to manually open the app after boot
         }
     }
 }

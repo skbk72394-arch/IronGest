@@ -1,51 +1,35 @@
-/**
- * IronGest - Application Class
- * Main application with React Native and SoLoader initialization
- * 
- * @author IronGest Team
- * @version 1.0.0
- */
-
 package com.irongest
 
 import android.app.Application
-import com.facebook.react.PackageList
-import com.facebook.react.ReactApplication
-import com.facebook.react.ReactHost
-import com.facebook.react.ReactNativeHost
-import com.facebook.react.ReactPackage
-import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
-import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
-import com.facebook.react.defaults.DefaultReactNativeHost
-import com.facebook.soloader.SoLoader
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 
-class IronGestApplication : Application(), ReactApplication {
+class IronGestApplication : Application() {
 
-    private val reactNativeHost: ReactNativeHost = object : DefaultReactNativeHost(this) {
-        override fun getPackages(): List<ReactPackage> {
-            val packages = PackageList(this).packages
-            // Add custom native modules
-            packages.add(IronGestPackage())
-            return packages
-        }
-
-        override fun getJSMainModuleName(): String = "index"
-        override fun getUseDeveloperSupport(): Boolean = BuildConfig.DEBUG
-    }
-
-    override fun getReactHost(): ReactHost {
-        return getDefaultReactHost(applicationContext, reactNativeHost)
+    companion object {
+        const val CHANNEL_ID = "irongest_service"
+        const val CHANNEL_NAME = "IronGest Service"
     }
 
     override fun onCreate() {
         super.onCreate()
-        
-        // Initialize SoLoader
-        SoLoader.init(this, false)
-        
-        // Enable New Architecture
-        if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-            load()
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                CHANNEL_NAME,
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "IronGest foreground service notification"
+                setShowBadge(false)
+            }
+            
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager.createNotificationChannel(channel)
         }
     }
 }

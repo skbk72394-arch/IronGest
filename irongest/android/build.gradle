@@ -1,114 +1,22 @@
-/**
- * IronGest - Root Android Build Configuration
- * Production-grade build configuration for React Native
- */
-
 buildscript {
-    ext {
-        // React Native version
-        reactNativeVersion = "0.73.2"
-        
-        // Android SDK versions
-        buildToolsVersion = "34.0.0"
-        minSdkVersion = 26
-        compileSdkVersion = 34
-        targetSdkVersion = 34
-        
-        // NDK version
-        ndkVersion = "25.2.9519653"
-        
-        // Kotlin version
-        kotlinVersion = "1.9.22"
-        
-        // Gradle plugins
-        androidPluginVersion = "8.2.2"
-        kotlinPluginVersion = "1.9.22"
-    }
-
+    ext.kotlin_version = '1.9.22'
     repositories {
         google()
         mavenCentral()
     }
-
     dependencies {
-        classpath "com.android.tools.build:gradle:$androidPluginVersion"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinPluginVersion"
-        classpath "com.facebook.react:react-native-gradle-plugin"
+        classpath 'com.android.tools.build:gradle:8.2.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
-}
-
-plugins {
-    id "com.android.application" version "$androidPluginVersion" apply false
-    id "com.android.library" version "$androidPluginVersion" apply false
-    id "org.jetbrains.kotlin.android" version "$kotlinPluginVersion" apply false
-    id "com.facebook.react" version "$reactNativeVersion" apply false
 }
 
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
-    
-    // Force consistent dependency versions
-    configurations.all {
-        resolutionStrategy {
-            force 'androidx.core:core-ktx:1.12.0'
-            force 'androidx.appcompat:appcompat:1.6.1'
-            force 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-            force 'org.jetbrains.kotlin:kotlin-stdlib:1.9.22'
-            force 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.22'
-        }
     }
 }
 
-// Subproject configuration
-subprojects {
-    afterEvaluate { subproject ->
-        if (subproject.hasProperty('android')) {
-            android {
-                compileSdkVersion rootProject.ext.compileSdkVersion
-                buildToolsVersion rootProject.ext.buildToolsVersion
-                
-                defaultConfig {
-                    minSdkVersion rootProject.ext.minSdkVersion
-                    targetSdkVersion rootProject.ext.targetSdkVersion
-                }
-                
-                compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_17
-                    targetCompatibility JavaVersion.VERSION_17
-                }
-            }
-        }
-    }
-}
-
-// Task for cleaning build artifacts
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-
-// Task for downloading MediaPipe models
-task downloadMediaPipeModels {
-    doLast {
-        def assetsDir = file("app/src/main/assets/models")
-        assetsDir.mkdirs()
-        
-        def handLandmarkerUrl = 'https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task'
-        def handLandmarkerFile = new File(assetsDir, 'hand_landmarker.task')
-        
-        if (!handLandmarkerFile.exists()) {
-            println "Downloading hand_landmarker.task..."
-            new URL(handLandmarkerUrl).withInputStream { i ->
-                handLandmarkerFile.withOutputStream { it << i }
-            }
-        }
-    }
-}
-
-// Pre-build task
-tasks.named('preBuild').configure {
-    dependsOn downloadMediaPipeModels
 }
