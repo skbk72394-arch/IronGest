@@ -1,0 +1,89 @@
+# IronGest - .gitignore
+
+# OSX
+.DS_Store
+
+# Android
+*.iml
+.gradle
+local.properties
+/android/app/build
+/android/.cxx
+/android/build
+/android/app/.cxx
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# iOS
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+**/xcshareddata/WorkspaceSettings.xcsettings
+**/xcshareddata/IDEWorkspaceChecks.plist
+**/xcuserdata/*
+ios/Pods/
+ios/build/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn.lock
+package-lock.json
+
+# React Native
+*.jsbundle
+*.bundle
+
+# Metro
+.metro-health-check*
+
+# Debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# Testing
+coverage/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Secrets
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+
+# Build artifacts
+*.log
+*.tmp
+*.temp
+
+# Native build
+.cxx/
+.externalNativeBuild/
+.gradle/
+*.so
+
+# Keystores (keep debug)
+!debug.keystore
+release.keystore
+
+# EAS
+.eas/

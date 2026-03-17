@@ -1,0 +1,110 @@
+{
+  "cli": {
+    "version": 8,
+    "projects": {
+    "irongest": {
+      "app": {
+        "appName": "IronGest",
+        "appId": "com.irongest",
+        "userInterfaceStyle": "none",
+        "backgroundColor": "#0a0a0f",
+        "icon": "./assets/icon.png",
+        "adaptiveIcon": {
+          "foregroundImage": "./assets/adaptive-icon.png",
+          "backgroundColor": "#0a0a0f"
+        },
+        "notification": {
+          "icon": "./assets/notification-icon.png",
+          "color": "#00d4ff",
+          "androidMode": true
+        },
+        "android": {
+            "permissions": [
+            "CAMERA",
+            "SYSTEM_ALERT_WINDOW",
+            "BIND_ACCESSIBILITY_SERVICE"
+          ],
+          "compileSdkVersion": 34,
+          "targetSdkVersion": 34,
+          "minSdkVersion": 26,
+          "buildType": "app-bundle"
+        },
+        "ios": {
+          "supportsTablet": true,
+          "supportsLandscape": true
+        },
+        "extra": {
+          "eas": {
+            "projectId": "your-project-id"
+          }
+        }
+      }
+    }
+  },
+  "build": {
+    "production": {
+    "distribution": "store",
+    "android": {
+    "buildType": "app-bundle",
+    "credentialsSource": "local",
+    "gradleCommand": ":app:bundleRelease",
+    "withoutCredentials": false
+    },
+    "cache": {
+    "disabled": false,
+    "paths": [
+      "node_modules",
+      ".gradle",
+      "android/.cxx",
+      "android/app/build"
+    ]
+  }
+  },
+  "apk": {
+    "distribution": "internal",
+    "android": {
+    "buildType": "apk",
+    "credentialsSource": "local",
+    "gradleCommand": ":app:assembleRelease",
+    "withoutCredentials": false
+    },
+    "cache": {
+    "disabled": false
+    }
+  },
+  "development": {
+    "distribution": "internal",
+    "android": {
+    "buildType": "apk",
+    "developmentClient": true,
+    "gradleCommand": ":app:assembleDebug",
+    "withoutCredentials": true
+    },
+    "cache": {
+    "disabled": false
+    }
+  },
+  "preview": {
+    "distribution": "internal",
+    "android": {
+    "buildType": "apk",
+    "developmentClient": false,
+    "gradleCommand": ":app:assembleRelease",
+    "withoutCredentials": true
+    },
+    "cache": {
+    "disabled": false
+    }
+  }
+  },
+  "local": {
+    "distribution": "internal",
+    "android": {
+    "buildType": "apk",
+    "gradleCommand": ":app:assembleDebug",
+    "withoutCredentials": true,
+    "developmentClient": true,
+    "local": true
+    }
+  }
+}

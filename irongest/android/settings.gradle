@@ -1,0 +1,65 @@
+/**
+ * IronGest - Android Settings Configuration
+ * Project structure and plugin management
+ */
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id "com.android.settings" version "8.2.2"
+    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
+}
+
+extensions.configure(com.android.build.api.dsl.SettingsExtension) {
+    compileSdk 34
+    minSdk 26
+    targetSdk 34
+    
+    // NDK configuration
+    ndkVersion = "25.2.9519653"
+}
+
+rootProject.name = "IronGest"
+
+// Include app module
+include ":app"
+
+// Include React Native modules
+includeBuild('../../node_modules/@react-native/gradle-plugin')
+
+// Apply React Native settings
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); 
+applyNativeModulesSettingsGradle(settings)
+
+// Include React Native modules from autolinking
+includeBuild('../../node_modules/react-native') {
+    dependencySubstitution {
+        substitute(module("com.facebook.react:react-native")).using(project(":"))
+        substitute(module("com.facebook.react:react-native-android")).using(project(":"))
+    }
+}
+
+// Include external React Native modules
+include ':react-native-reanimated'
+project(':react-native-reanimated').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-reanimated/android')
+
+include ':react-native-gesture-handler'
+project(':react-native-gesture-handler').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-gesture-handler/android')
+
+include ':react-native-screens'
+project(':react-native-screens').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-screens/android')
+
+include ':react-native-safe-area-context'
+project(':react-native-safe-area-context').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-safe-area-context/android')
+
+include ':react-native-svg'
+project(':react-native-svg').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-svg/android')
+
+include ':react-native-vision-camera'
+project(':react-native-vision-camera').projectDir = new File(rootProject.projectDir, '../../node_modules/react-native-vision-camera/android')
