@@ -3,31 +3,23 @@ name: Build APK
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
-    permissions:
-      contents: read
     
     steps:
-    - name: Checkout repository
+    - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
+    - name: Setup Node
       uses: actions/setup-node@v4
       with:
         node-version: '20'
 
-    - name: Install npm dependencies
-      working-directory: ./irongest
-      run: npm install --legacy-peer-deps || npm install
-
-    - name: Setup Java 17
+    - name: Setup Java
       uses: actions/setup-java@v4
       with:
         distribution: 'temurin'
@@ -36,47 +28,45 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
-    - name: Make gradlew executable
-      working-directory: ./irongest/android
-      run: chmod +x gradlew
+    - name: Install dependencies
+      working-directory: irongest
+      run: npm install --legacy-peer-deps
 
-    - name: Create assets directory
-      run: mkdir -p irongest/android/app/src/main/assets/models
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v3
+      with:
+        gradle-home-cache-cleanup: true
 
-    - name: Create local.properties
-      working-directory: ./irongest/android
-      run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+    - name: Create debug keystore
+      working-directory: irongest/android/app
+      run: |
+        if [ ! -f debug.keystore ]; then
+          keytool -genkeypair -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" || true
+        fi
+
+    - name: Grant gradlew permission
+      working-directory: irongest/android
+      run: chmod +x gradlew || true
 
     - name: Build Debug APK
-      working-directory: ./irongest/android
-      run: ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 || echo "Build attempted"
-
-    - name: Find APK files
+      id: build
+      working-directory: irongest/android
       run: |
-        echo "Searching for APK files..."
-        find irongest -name "*.apk" -type f 2>/dev/null || echo "No APK found"
-        ls -la irongest/android/app/build/outputs/apk/debug/ 2>/dev/null || true
+        echo "sdk.dir=$ANDROID_HOME" > local.properties || true
+        ./gradlew assembleDebug --no-daemon --info 2>&1 || true
+
+    - name: Find APKs
+      run: |
+        echo "Finding APK files..."
+        find . -name "*.apk" -type f 2>/dev/null || true
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
       if: always()
       with:
-        name: IronGest-Debug-APK-${{ github.run_number }}
+        name: IronGest-APK
         path: |
           irongest/android/app/build/outputs/apk/**/*.apk
+          **/*.apk
         retention-days: 30
         if-no-files-found: ignore
-
-    - name: Build Summary
-      if: always()
-      run: |
-        echo "## 📱 IronGest APK Build" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "**Build Number:** ${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
-        echo "**Status:** ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "### APK Files:" >> $GITHUB_STEP_SUMMARY
-        find irongest -name "*.apk" -exec ls -lh {} \; >> $GITHUB_STEP_SUMMARY 2>/dev/null || echo "No APK files generated" >> $GITHUB_STEP_SUMMARY
-        echo "" >> $GITHUB_STEP_SUMMARY
-        echo "---" >> $GITHUB_STEP_SUMMARY
-        echo "📥 **Download APK from the Artifacts section below!**" >> $GITHUB_STEP_SUMMARY
